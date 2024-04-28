@@ -1,21 +1,11 @@
-
-// interface DayInfo {
-//     day: Date;
-//     price: number | null;
-//     volume: number | null;
-// }
+import { Product } from "./Products";
 
 export class DayInfo {
     constructor(public day: Date, public price: number | null, public volume: number | null) {}
 }
 
-// interface ProductData {
-//     name: string;
-//     data: DayInfo[];
-// }
-
 export class ProductData {
-    constructor(public name: string, public infoArray: DayInfo[] = []) {}
+    constructor(public product: Product, public infoArray: DayInfo[] = []) {}
 
     addDayInfo(dayInfo: DayInfo) {
         this.infoArray.push(dayInfo);

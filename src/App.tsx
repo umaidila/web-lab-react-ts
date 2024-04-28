@@ -5,6 +5,7 @@ import DataParametersForm from "./components/DataParametersForm";
 import DataUploader from './components/DataUploader';
 import { ProductData } from './dtos/ProductData';
 import { Product } from './dtos/Products';
+import DataGraphDrawer from './components/DataGraphDrawer';
 
 function App() {
   const [isPriceSelected, setPriceSelected] = useState(true);
@@ -25,7 +26,7 @@ function App() {
       setSelectedProducts={setSelectedProducts}
     />
     <DataUploader onDataLoaded={handleDataLoaded}/>
-
+    <DataGraphDrawer data={productsData} selectedProducts={selectedProducts} isPriceSelected={isPriceSelected}/>
     </div>
   );
 }

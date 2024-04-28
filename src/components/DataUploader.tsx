@@ -1,6 +1,7 @@
 import React, { useState, useRef, ChangeEvent } from 'react';
 import { DayInfo, ProductData } from '../dtos/ProductData';
 import { DataUploaderProps } from '../props/DataUploaderProps';
+import { products } from '../dtos/Products';
 
 
 
@@ -67,7 +68,12 @@ function csvToObject(csvString: string): ProductData[] {
                 const volume = values[volumeIndex] ? parseFloat(values[volumeIndex].replace(/,/g, '')) : null;
 
                 if (!items[name]) {
-                    items[name] = new ProductData(name);
+                    const selectedProduct = products.find(product => product.backName === name);
+                    if (!selectedProduct) {
+                        console.error(`Product with backName ${name} not found`);
+                        return;
+                    }
+                    items[name] = new ProductData(selectedProduct);
                 }
 
                 const dayInfo = new DayInfo(date, price, volume);
