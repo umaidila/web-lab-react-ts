@@ -36,3 +36,34 @@
     transform: rotate(360deg);
   }
 }
+
+th.asc::after {
+  content: " ▲1"; /* Стрелка вверх */
+  font-size: 0.75em;
+}
+
+th.desc::after {
+  content: " ▼1"; /* Стрелка вниз */
+  font-size: 0.75em;
+}
+
+th.asc2::after {
+  content: " ▲2"; /* Стрелка вверх */
+  font-size: 0.75em;
+}
+
+th.desc2::after {
+  content: " ▼2"; /* Стрелка вниз */
+  font-size: 0.75em;
+}
+
+
+svg text {
+  font: 8px Verdana;
+}
+
+svg path,
+line {
+  fill: none;
+  width: 1px;
+}

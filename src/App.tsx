@@ -1,31 +1,60 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import DataParametersForm from "./components/DataParametersForm";
 import DataUploader from './components/DataUploader';
-import { ProductData } from './dtos/ProductData';
+import { DayInfo } from './dtos/ProductData';
 import { Product } from './dtos/Products';
 import DataGraphDrawer from './components/DataGraphDrawer';
 import DataTable from './components/DataTable';
+import { groupAndFilterAndSelectValues } from './utils/HelperUtils';
 
-function App() {
-  const [isPriceSelected, setPriceSelected] = useState(true);
+const App: React.FC = () => {
+  const [data, setData] = useState<DayInfo[]>([]);
   const [selectedProducts, setSelectedProducts] = useState<Product[]>([]);
-  const [productsData, setProductsData] = useState<ProductData[]>([]);
+  const [groupSelect, setGroupSelect] = useState<string>("month");
+  const [selectedMarker, setSelectedMarker] = useState<string>("mean");
+  const [startDate, setStartDate] = useState<Date >(new Date('2019-01-01'));
+  const [endDate, setEndDate] = useState<Date >(new Date('2024-08-10'));
 
 
-  return (<div>
-    <DataParametersForm 
-      isPriceSelected={isPriceSelected}
-      setPriceSelected={setPriceSelected}
-      selectedProducts={selectedProducts}
-      setSelectedProducts={setSelectedProducts}
-    />
-    <DataUploader onDataLoaded={setProductsData}/>
-    <DataGraphDrawer data={productsData} selectedProducts={selectedProducts} isPriceSelected={isPriceSelected}/>
-    <DataTable data={productsData} selectedProducts={selectedProducts} isPriceSelected={isPriceSelected}/>
+  const filteredAndGroupedData: DayInfo[] = useMemo(() => {
+    return groupAndFilterAndSelectValues(
+      data,
+      selectedProducts,
+      groupSelect,
+      selectedMarker,
+      startDate,
+      endDate
+    );
+  }, [data, selectedProducts, groupSelect, selectedMarker, startDate, endDate]);
+
+ 
+
+  return (
+    <div>
+      <h3>Список цен на основные активы</h3>
+      <DataUploader onDataLoaded={setData} />
+      <DataParametersForm
+        selectedProducts={selectedProducts}
+        setSelectedProducts={setSelectedProducts}
+        groupSelect={groupSelect}
+        setGroupSelect={setGroupSelect}
+        selectedMarker={selectedMarker}
+        setSelectedMarker={setSelectedMarker}
+        startDate={startDate}
+        setStartDate={setStartDate}
+        endDate={endDate}
+        setEndDate={setEndDate}
+      />
+        <DataGraphDrawer
+        data={filteredAndGroupedData}
+        selectedProducts={selectedProducts}
+      />
+      <DataTable data={filteredAndGroupedData} 
+      />
     </div>
   );
-}
+};
 
 export default App;

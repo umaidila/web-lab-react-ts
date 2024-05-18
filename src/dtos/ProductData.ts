@@ -1,13 +1,13 @@
-import { Product } from "./Products";
-
 export class DayInfo {
-    constructor(public day: Date, public price: number | null, public volume: number | null) {}
-}
+    public day: Date;
+    public prices: { [productName: string]: number | null };
 
-export class ProductData {
-    constructor(public product: Product, public infoArray: DayInfo[] = []) {}
+    constructor(day: Date) {
+        this.day = day;
+        this.prices = {};
+    }
 
-    addDayInfo(dayInfo: DayInfo) {
-        this.infoArray.push(dayInfo);
+    addPrice(productName: string, price: number | null) {
+        this.prices[productName] = price;
     }
 }

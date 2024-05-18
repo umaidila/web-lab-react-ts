@@ -1,7 +1,7 @@
-import React, { useState, useRef, ChangeEvent } from 'react';
-import { DayInfo, ProductData } from '../dtos/ProductData';
+import React, { useState, ChangeEvent } from 'react';
+import { DayInfo } from '../dtos/ProductData';
 import { DataUploaderProps } from '../props/DataUploaderProps';
-import { products } from '../dtos/Products';
+
 
 
 
@@ -45,44 +45,31 @@ const DataUploader: React.FC<DataUploaderProps> = ({ onDataLoaded }) => {
     );
 };
 
-function csvToObject(csvString: string): ProductData[] {
-    console.log("CSV string = ", csvString);
+function csvToObject(csvString: string): DayInfo[] {
     const lines = csvString.trim().split('\n');
     const headers = lines[0].split(',');
+    const days: { [date: string]: DayInfo } = {};
 
-    const items: { [key: string]: ProductData } = {};
+    lines.slice(1).forEach(line => {
+        const values = parseCSVLine(line);
+        const dateStr = values[headers.indexOf('Date')];
+        const date = parseDate(dateStr);
 
-    lines.slice(1).forEach(valueLine => {
-        const values = parseCSVLine(valueLine);
-        const date = parseDate(values[headers.indexOf('Date')]);
+        if (!days[dateStr]) {
+            days[dateStr] = new DayInfo(date);
+        }
 
         headers.forEach((header, index) => {
-            if (header.endsWith("_Price") || header.endsWith("_Vol")) {
-                const name_parts = header.split('_');
-                name_parts.pop();
-                const name = name_parts.join("_");
-                const priceIndex = headers.indexOf(name + "_Price");
-                const volumeIndex = headers.indexOf(name + "_Vol");
+            if (header.endsWith("_Price")) {
+                const baseName = header.split('_').slice(0, -1).join('_');
+                const price = values[index] ? parseFloat(values[index].replace(/,/g, '')) : null;
 
-                const price = values[priceIndex] ? parseFloat(values[priceIndex].replace(/,/g, '')) : null;
-                const volume = values[volumeIndex] ? parseFloat(values[volumeIndex].replace(/,/g, '')) : null;
-
-                if (!items[name]) {
-                    const selectedProduct = products.find(product => product.backName === name);
-                    if (!selectedProduct) {
-                        console.error(`Product with backName ${name} not found`);
-                        return;
-                    }
-                    items[name] = new ProductData(selectedProduct);
-                }
-
-                const dayInfo = new DayInfo(date, price, volume);
-                items[name].addDayInfo(dayInfo);
+                days[dateStr].addPrice(baseName, price);
             }
         });
     });
 
-    return Object.values(items);
+    return Object.values(days);
 }
 
 function parseCSVLine(text: string): string[] {
@@ -104,7 +91,6 @@ function parseDate(dateStr: string): Date {
 
     return new Date(year, month, day);
 }
-
 
 export default DataUploader;
 

@@ -1,8 +1,7 @@
-import { ProductData } from "../dtos/ProductData";
+import { DayInfo } from "../dtos/ProductData";
 import { Product } from "../dtos/Products";
 
 export interface DataGraphDrawerProps {
-    data: ProductData[];
+    data: DayInfo[];
     selectedProducts: Product[];
-    isPriceSelected: boolean;
 }

@@ -1,5 +1,5 @@
-import { ProductData } from "../dtos/ProductData";
+import { DayInfo } from "../dtos/ProductData";
 
 export interface DataUploaderProps {
-    onDataLoaded: (data: ProductData[]) => void;
+    onDataLoaded: (data: DayInfo[]) => void;
 }

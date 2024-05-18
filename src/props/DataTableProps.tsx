@@ -1,9 +1,7 @@
-import { ProductData } from "../dtos/ProductData";
-import { Product } from "../dtos/Products";
+// DataTableProps.ts
+
+import { DayInfo } from "../dtos/ProductData";
 
 export interface DataTableProps {
-    data: ProductData[];
-    selectedProducts: Product[];
-    isPriceSelected: boolean;
-  }
-  
+  data: DayInfo[];
+}
